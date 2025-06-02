@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
-import WebSocketService from "../services/WebSocketService";
+import WebSocketServiceFactory, {
+  IWebSocketService,
+} from "../services/WebSocketServiceFactory";
 
 interface LoginProps {
   onLoginSuccess: (token: string) => void;
