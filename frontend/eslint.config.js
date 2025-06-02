@@ -23,6 +23,10 @@ export default [
         window: "readonly",
         localStorage: "readonly",
         WebSocket: "readonly",
+        Event: "readonly",
+        CloseEvent: "readonly",
+        setTimeout: "readonly",
+        clearTimeout: "readonly",
       },
     },
     plugins: {
