@@ -103,6 +103,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
         <div className="login-inner">
           <div className="login-form-container">
             <h2>Login</h2>
+            {serviceInfo && <div className="service-info">{serviceInfo}</div>}
             {error && <div className="error-message">{error}</div>}
             <form onSubmit={handleLogin}>
               <div className="form-group">
