@@ -33,6 +33,7 @@ go.work.sum
 
 # Npm package lock
 frontend/node_modules/
+yarn.lock
 
 
 # Other files
