@@ -16,11 +16,35 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [serviceInfo, setServiceInfo] = useState<string>("");
 
   useEffect(() => {
+    // Initialize WebSocket service
+    const initializeService = async () => {
+      try {
+        const service = await WebSocketServiceFactory.createService();
+        setWsService(service);
+
+        // Set service info for user
+        if (WebSocketServiceFactory.isMockService()) {
+          setServiceInfo(
+            "Demo mode: Using mock authentication (username: admin, password: password)",
+          );
+        } else {
+          setServiceInfo("Connected to backend server");
+        }
+      } catch (error) {
+        console.error("Failed to initialize WebSocket service:", error);
+        setError("Failed to initialize connection service");
+      }
+    };
+
+    initializeService();
+
     // Clean up WebSocket connection when component unmounts
     return () => {
-      wsService.disconnect();
+      if (wsService) {
+        wsService.disconnect();
+      }
     };
-  }, [wsService]);
+  }, []);
 
   const handleLogin = async (e?: React.FormEvent | React.MouseEvent) => {
     if (e) e.preventDefault();
