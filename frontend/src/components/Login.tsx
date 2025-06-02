@@ -19,8 +19,8 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     };
   }, [wsService]);
 
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const handleLogin = async (e?: React.FormEvent | React.MouseEvent) => {
+    if (e) e.preventDefault();
     setError(null);
     setLoading(true);
 
