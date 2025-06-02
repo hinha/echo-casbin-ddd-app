@@ -12,7 +12,8 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [wsService] = useState(() => new WebSocketService());
+  const [wsService, setWsService] = useState<IWebSocketService | null>(null);
+  const [serviceInfo, setServiceInfo] = useState<string>("");
 
   useEffect(() => {
     // Clean up WebSocket connection when component unmounts
