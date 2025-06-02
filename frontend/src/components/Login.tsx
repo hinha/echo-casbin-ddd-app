@@ -40,9 +40,7 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
 
     // Clean up WebSocket connection when component unmounts
     return () => {
-      if (wsService) {
-        wsService.disconnect();
-      }
+      WebSocketServiceFactory.reset();
     };
   }, []);
 
