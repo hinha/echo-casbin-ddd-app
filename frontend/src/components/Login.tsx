@@ -50,7 +50,16 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
       });
     } catch (err) {
       setLoading(false);
-      setError("Failed to connect to server. Please try again.");
+
+      // Provide more specific error messages
+      if (err instanceof Error) {
+        setError(err.message);
+      } else {
+        setError(
+          "Failed to connect to server. Please ensure the backend server is running and try again.",
+        );
+      }
+
       console.error("WebSocket connection error:", err);
     }
   };
