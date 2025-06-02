@@ -32,7 +32,7 @@ class WebSocketServiceFactory {
       this.instance = realService;
       this.useMock = false;
       return realService;
-    } catch (error) {
+    } catch {
       console.warn(
         "Real WebSocket service unavailable, falling back to mock service",
       );
