@@ -19,9 +19,11 @@ type Config struct {
 
 // ServerConfig holds all server related configuration
 type ServerConfig struct {
-	Port         string
-	ReadTimeout  time.Duration
-	WriteTimeout time.Duration
+	Port                 string
+	ReadTimeout          time.Duration
+	WriteTimeout         time.Duration
+	InitialAdminUsername string
+	InitialAdminPassword string
 }
 
 // DatabaseConfig holds all database related configuration
@@ -75,9 +77,11 @@ func NewConfig() *Config {
 
 	return &Config{
 		Server: ServerConfig{
-			Port:         getEnv("SERVER_PORT", "8080"),
-			ReadTimeout:  getEnvAsDuration("SERVER_READ_TIMEOUT", 10*time.Second),
-			WriteTimeout: getEnvAsDuration("SERVER_WRITE_TIMEOUT", 10*time.Second),
+			Port:                 getEnv("SERVER_PORT", "8080"),
+			ReadTimeout:          getEnvAsDuration("SERVER_READ_TIMEOUT", 10*time.Second),
+			WriteTimeout:         getEnvAsDuration("SERVER_WRITE_TIMEOUT", 10*time.Second),
+			InitialAdminUsername: getEnv("INITIAL_ADMIN_USERNAME", "admin"),
+			InitialAdminPassword: getEnv("INITIAL_ADMIN_PASSWORD", "admin123"),
 		},
 		Database: DatabaseConfig{
 			Host:     getEnv("DB_HOST", "localhost"),

@@ -109,7 +109,7 @@ func (h *UserHandler) Register(c echo.Context) error {
 // LoginRequest represents the request for user login
 type LoginRequest struct {
 	Username string `json:"username" validate:"required"`
-	Password string `json:"password" validate:"required"`
+	Password string `json:"password" validate:"required,min=6"`
 }
 
 // LoginResponse represents the response for user login

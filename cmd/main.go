@@ -59,6 +59,15 @@ func main() {
 	userRepo := persistence.NewUserRepository(db.DB)
 	apiClientRepo := persistence.NewAPIClientRepository(db.DB)
 
+	// Initialize and run seeder
+	if *migrateFlag {
+		seeder := persistence.NewSeeder(cfg, userRepo)
+		if err := seeder.Seed(context.Background()); err != nil {
+			log.Fatalf("Failed to seed database: %v", err)
+		}
+		log.Println("Database seeding users completed successfully")
+	}
+
 	// Initialize auth services
 	jwtService := auth.NewJWTService(cfg)
 	apiKeyService := auth.NewAPIKeyService(cfg, apiClientRepo)

@@ -4,7 +4,7 @@ import (
 	"errors"
 	"time"
 
-	"golang.org/x/crypto/bcrypt"
+	"github.com/hinha/echo-casbin-ddd-app/pkg/argon2"
 )
 
 // User represents a user in the system
@@ -32,7 +32,7 @@ func NewUser(username, email, password, role string) (*User, error) {
 		return nil, errors.New("password cannot be empty")
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword, err := argon2.GenerateHash(password)
 	if err != nil {
 		return nil, err
 	}
@@ -40,7 +40,7 @@ func NewUser(username, email, password, role string) (*User, error) {
 	return &User{
 		Username:  username,
 		Email:     email,
-		Password:  string(hashedPassword),
+		Password:  hashedPassword,
 		Role:      role,
 		Active:    true,
 		CreatedAt: time.Now(),
@@ -50,8 +50,8 @@ func NewUser(username, email, password, role string) (*User, error) {
 
 // ValidatePassword checks if the provided password matches the stored hash
 func (u *User) ValidatePassword(password string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
-	return err == nil
+	isValid, _ := argon2.VerifyHash(password, u.Password)
+	return isValid
 }
 
 // ChangePassword changes the user's password
@@ -60,12 +60,12 @@ func (u *User) ChangePassword(password string) error {
 		return errors.New("password cannot be empty")
 	}
 
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	hashedPassword, err := argon2.GenerateHash(password)
 	if err != nil {
 		return err
 	}
 
-	u.Password = string(hashedPassword)
+	u.Password = hashedPassword
 	u.UpdatedAt = time.Now()
 	return nil
 }
