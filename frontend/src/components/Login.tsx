@@ -51,6 +51,12 @@ const Login: React.FC<LoginProps> = ({ onLoginSuccess }) => {
     setError(null);
     setLoading(true);
 
+    if (!wsService) {
+      setError("WebSocket service not initialized. Please refresh the page.");
+      setLoading(false);
+      return;
+    }
+
     try {
       // Connect to WebSocket
       await wsService.connect();
