@@ -13,7 +13,7 @@ class MockWebSocketService {
 
   // Simulate WebSocket connection
   connect(): Promise<MockWebSocketService> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       // Simulate connection delay
       setTimeout(() => {
         console.log("Mock WebSocket connection established to:", this.url);
