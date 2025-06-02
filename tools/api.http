@@ -1,0 +1,90 @@
+### Variables
+@authToken = {{login.response.body.token}}
+
+### Register a new user
+# @name register
+POST {{baseUrlApp}}/{{pathUrlUser}}/register
+Content-Type: application/json
+
+{
+  "username": "admin",
+  "email": "{{email}}",
+  "password": "{{password}}",
+  "role": "superadmin"
+}
+
+### User login
+# @name login
+POST {{baseUrlApp}}/login
+Content-Type: application/json
+
+{
+  "username": "testuser",
+  "password": "password123"
+}
+
+### List users
+GET {{baseUrlApp}}/?page=1&limit=10
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Get a user by ID
+GET {{baseUrlApp}}/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Update a user
+PUT {{baseUrlApp}}/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "username": "updateduser",
+  "email": "updated@example.com"
+}
+
+### Change user password
+POST {{baseUrlApp}}/1/change-password
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "old_password": "password123",
+  "new_password": "newpassword123"
+}
+
+### Create a new API client
+POST {{baseUrlApp}}/
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "name": "Test API Client",
+  "description": "API client for testing"
+}
+
+### Delete an API client
+DELETE {{baseUrlApp}}/1
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Regenerate API key
+POST {{baseUrlApp}}/1/regenerate-key
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+### Set API client active status
+POST {{baseUrlApp}}/1/set-active
+Content-Type: application/json
+Authorization: Bearer {{authToken}}
+
+{
+  "active": true
+}
+
+### Connect to user WebSocket
+# Note: WebSocket connections cannot be made directly from HTTP clients
+# This is just a placeholder for documentation purposes
+GET {{baseUrlApp}}/users
+Content-Type: application/json
+Authorization: Bearer {{authToken}}

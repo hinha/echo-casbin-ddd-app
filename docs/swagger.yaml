@@ -1,0 +1,527 @@
+basePath: /api/v1
+definitions:
+  handler.APIClientResponse:
+    properties:
+      active:
+        type: boolean
+      api_key:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  handler.ChangePasswordRequest:
+    properties:
+      new_password:
+        minLength: 6
+        type: string
+      old_password:
+        type: string
+    required:
+    - new_password
+    - old_password
+    type: object
+  handler.CreateAPIClientRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  handler.ListAPIClientsResponse:
+    properties:
+      api_clients:
+        items:
+          $ref: '#/definitions/handler.APIClientResponse'
+        type: array
+      total_count:
+        type: integer
+    type: object
+  handler.ListUsersResponse:
+    properties:
+      total_count:
+        type: integer
+      users:
+        items:
+          $ref: '#/definitions/handler.UserResponse'
+        type: array
+    type: object
+  handler.LoginRequest:
+    properties:
+      password:
+        type: string
+      username:
+        type: string
+    required:
+    - password
+    - username
+    type: object
+  handler.LoginResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/handler.UserResponse'
+    type: object
+  handler.RegisterRequest:
+    properties:
+      email:
+        type: string
+      password:
+        minLength: 6
+        type: string
+      role:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - password
+    - role
+    - username
+    type: object
+  handler.RegisterResponse:
+    properties:
+      token:
+        type: string
+      user:
+        $ref: '#/definitions/handler.UserResponse'
+    type: object
+  handler.SetAPIClientActiveRequest:
+    properties:
+      active:
+        type: boolean
+    type: object
+  handler.UpdateAPIClientRequest:
+    properties:
+      description:
+        type: string
+      name:
+        type: string
+    required:
+    - name
+    type: object
+  handler.UpdateUserRequest:
+    properties:
+      email:
+        type: string
+      username:
+        type: string
+    required:
+    - email
+    - username
+    type: object
+  handler.UserResponse:
+    properties:
+      active:
+        type: boolean
+      created_at:
+        type: string
+      email:
+        type: string
+      id:
+        type: integer
+      role:
+        type: string
+      updated_at:
+        type: string
+      username:
+        type: string
+    type: object
+info:
+  contact:
+    email: martinus@example.com
+    name: Martinus Dawan
+  description: Example API with JWT, Casbin, PostgreSQL, WebSocket
+  license:
+    name: MIT
+  termsOfService: http://swagger.io/terms/
+  title: Echo Casbin DDD App
+  version: "1.0"
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      description: Get a paginated list of users
+      parameters:
+      - description: 'Page number (default: 1)'
+        in: query
+        name: page
+        type: integer
+      - description: 'Items per page (default: 10)'
+        in: query
+        name: limit
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of users
+          schema:
+            $ref: '#/definitions/handler.ListUsersResponse'
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: List users
+      tags:
+      - users
+    post:
+      consumes:
+      - application/json
+      description: Create a new API client with the provided details
+      parameters:
+      - description: API Client creation request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.CreateAPIClientRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created API client
+          schema:
+            $ref: '#/definitions/handler.APIClientResponse'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new API client
+      tags:
+      - api-clients
+  /{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete an existing API client
+      parameters:
+      - description: API Client ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete an API client
+      tags:
+      - api-clients
+    get:
+      consumes:
+      - application/json
+      description: Retrieve a user by their ID
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: User details
+          schema:
+            $ref: '#/definitions/handler.UserResponse'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: User not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a user by ID
+      tags:
+      - users
+    put:
+      consumes:
+      - application/json
+      description: Update an existing user with the provided details
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: User update request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.UpdateUserRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated user
+          schema:
+            $ref: '#/definitions/handler.UserResponse'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update a user
+      tags:
+      - users
+  /{id}/change-password:
+    post:
+      consumes:
+      - application/json
+      description: Change the password of an existing user
+      parameters:
+      - description: User ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Change password request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.ChangePasswordRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success message
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Change user password
+      tags:
+      - users
+  /{id}/regenerate-key:
+    post:
+      consumes:
+      - application/json
+      description: Regenerate the API key for an existing API client
+      parameters:
+      - description: API Client ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: API client with new API key
+          schema:
+            $ref: '#/definitions/handler.APIClientResponse'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Regenerate API key
+      tags:
+      - api-clients
+  /{id}/set-active:
+    post:
+      consumes:
+      - application/json
+      description: Set the active status of an existing API client
+      parameters:
+      - description: API Client ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Set active status request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.SetAPIClientActiveRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Updated API client
+          schema:
+            $ref: '#/definitions/handler.APIClientResponse'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Set API client active status
+      tags:
+      - api-clients
+  /login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticate a user and return a token
+      parameters:
+      - description: User login request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.LoginRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Logged in user with token
+          schema:
+            $ref: '#/definitions/handler.LoginResponse'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "401":
+          description: Unauthorized
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: User login
+      tags:
+      - users
+  /register:
+    post:
+      consumes:
+      - application/json
+      description: Register a new user with the provided details
+      parameters:
+      - description: User registration request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/handler.RegisterRequest'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Registered user with token
+          schema:
+            $ref: '#/definitions/handler.RegisterResponse'
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "500":
+          description: Internal server error
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Register a new user
+      tags:
+      - users
+  /users:
+    get:
+      consumes:
+      - application/json
+      description: Establish a WebSocket connection for real-time user updates
+      produces:
+      - application/json
+      responses:
+        "101":
+          description: Switching Protocols to WebSocket
+          schema:
+            type: string
+        "400":
+          description: Bad request
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Connect to user WebSocket
+      tags:
+      - websocket
+swagger: "2.0"
