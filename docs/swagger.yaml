@@ -58,6 +58,7 @@ definitions:
   handler.LoginRequest:
     properties:
       password:
+        minLength: 6
         type: string
       username:
         type: string
